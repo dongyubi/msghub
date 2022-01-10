@@ -170,6 +170,8 @@
 		    }
 		    return add + digit;
 		}
+		
+		});
 	</script>
 </head>
 <body>
@@ -205,7 +207,7 @@
 							<td>결제금액</td>
 							<td data-toggle="tooltip">
 								<label for="mertid" class="sr-only"></label>
-								<input type="text" id="amount" name="amount" class="form-control form-control-sm" placeholder="amount" required value="200">
+								<input type="text" id="amount" name="amount" class="form-control form-control-sm" readonly placeholder="amount" required value="200">
 							</td>
 						</tr>
 						<tr name="pay_card">
@@ -273,6 +275,24 @@
 				</table>
 				</div>
 			</form>
+			<div class="container">
+				<table class="table-sm table-bordered table-hover" style="width:100%;">
+				<colgroup>
+					<col width="30%">
+					<col width="80%">
+				</colgroup>
+				<thead>
+				</thead>
+				<tbody>
+					<tr>
+						<td>결과</td>
+						<td><textarea name="result" id="result" style="width:100%;border:1;overflow:visible;text-overflow:ellipsis;" rows=5></textarea></td>
+					</tr>
+				</tbody>
+				</table>
+			</div>
+					
+						
 		</div>
 	</div>
 </div>

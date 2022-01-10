@@ -1,11 +1,14 @@
 package com.example.demo;
 
+import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.HashMap;
 
 import org.json.simple.JSONObject;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import kr.co.uplus.api.java_sdk.method.Message;
@@ -15,9 +18,11 @@ import kr.co.uplus.api.java_sdk.method.Message;
 public class MainController {
 
 	// http://localhost:8080/ 으로 접속 시
-    @RequestMapping("/test")
-    public String welcome() {
+    @RequestMapping("/msghub")
+    public String welcome(ModelMap model) throws NoSuchAlgorithmException, UnsupportedEncodingException {
     	
+    	String apiPwd = SecurityUtil.encodeBase64(SecurityUtil.sha512("OpayTest0105494b508dd371e47ed3a912e877bd21"));
+    	model.addAttribute("apiPwd", apiPwd);
 		/*
 		 * Date today = new java.util.Date(); java.text.SimpleDateFormat sdf = new
 		 * java.text.SimpleDateFormat("yyyyMMddhhmmss");
@@ -50,7 +55,7 @@ public class MainController {
 		 * // 결과는 사용자 시스템에 맞게 처리 System.out.println(obj.toString());
 		 */
     	
-        return "main";
+        return "msghub";
     }
     
     private static String sha1(byte[] bs) throws Exception
