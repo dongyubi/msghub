@@ -1,4 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%
+request.setCharacterEncoding("utf-8");
+
+String apiKey = "APIR6tuOHX";
+
+System.out.println("apiKey: " + apiKey);
+
+%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -69,45 +77,201 @@
 	<script type="text/javascript">
 	
 	$(function(){
+		var randomStr = makeRandomStr();
+		var apiPwd = "${apiPwd}";
+		$("#apiPwd").val(apiPwd+"."+randomStr);
 		
 		var response = ${response};
 		$("#result").val(JSON.stringify(response));
 		
-		// 요청버튼 클릭
-		$('#submitBtn').click(function(){
-			ajaxSend();
-		});
 		
-	    
-		function ajaxSend() {
+		/*
+		var response = "${response}";
+		console.log("apiPwd=>"+apiPwd);
+		console.log("response=>"+response);
+		
+		var data = $("#inputFrm").serialize();
+		console.log("data1==>"+data);
+		
+		var data2 = $("#inputFrm").serializeArray();
+		var data3 = JSON.stringify(data2);
+		console.log("data stringify==>"+JSON.stringify(data2));
+		console.log("data parse==>"+JSON.parse(data3));
+		
+		var jsonObj = JSON.parse("${jsonObj}");
+		console.log("jsonObj===>"+jsonObj);
+		console.log("jsonObj===>"+jsonObj.code);
+		console.log("jsonObj===>"+jsonObj.message);
+		
+		
+		var obj = {"code":"29001","message":"must not be empty property=apiKey"};
+		
+		var obj = {"code":"29001","message":"test"};
+		
+		*/
+		
+		// 인증값 요청
+		/*
+		$.ajax({
+			url : "https://api.msghub.uplus.co.kr/auth/v1/" + randomStr
+			, type : "POST"
+			, method : "POST"
+			, dataType : "json"
+			, data : $("#inputFrm").serialize()
+			, beforeSend : function(xhr) {
+				xhr.setRequestHeader("accept", "*삭제/*");
+				xhr.setRequestHeader("Content-Type", "application/json");
+			}
+			, success : function(data) {
+				$("#result").val(data);
+			}
+			, error : function(request,status,error){
+				$("#result").val("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error+"status:"+status);
+		        console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error+"status:"+status);
+		    }
+		});
+		*/
+		
+		$('#submitBtn').click(function(){
+			var request = $("#request").val();
+			var contentType = $("#contentType").val();
+			var methodType = $("#methodType").val();
 			
-	    	$.ajax({
-				url : "${pageContext.request.contextPath}/ajaxRequest"
+			if(request == "mms2" || request == "mms3"){
+				request = "mms";
+			}
+			console.log(request+"==="+contentType+"=="+methodType);
+			
+			$.ajax({
+				url : "${pageContext.request.contextPath}/" + "test"
 				, type : "POST"
+				, method : "POST"
 				, dataType : "json"
 				, data : $("#inputFrm").serialize()
+				, beforeSend : function(xhr) {
+					xhr.setRequestHeader("accept", "*/*");
+					xhr.setRequestHeader("Content-Type", "application/json");
+				}
 				, success : function(data) {
-					$("#result").val("success ==>"+JSON.stringify(data));
+					console.log("success==>"+data);
+					console.log("success==>"+JSON.stringify(data));
+					console.log("success==>"+data.isMarried);
+					$("#result").val(JSON.stringify(data));
 				}
 				, error : function(request,status,error){
-					$("#result").val("error ==>"+"code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error+"status:"+status);
+					$("#result").val("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error+"status:"+status);
+			        console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error+"status:"+status);
 			    }
 			});
-	    	
+			
+			//ajaxSend(request, contentType, methodType);
+		});
+		
+		// 토큰 인증
+		/* SHA512.encryptToBase64( SHA512.encryptToBase64(apiPwd) + "." + randomStr ))
+		
+		curl -X POST "https://api.msghub.uplus.co.kr/auth/v1/12345"
+		  -H "accept: *'/*"
+		  -H  "Content-Type: application/json"
+		  -d '{
+		      "apiKey": "1",
+		      "apiPwd": "fwxbxKFf7RjMUoSGVJML6YTx..."
+		  }'
+		  
+		// 토큰 갱신
+		curl -X PUT "https://api.msghub.uplus.co.kr/auth/v1/refresh"
+		-H  "accept: *'/*"
+		-H  "Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwi..."
+		
+		// sms 전송
+		/* curl -X POST "https://api.msghub.uplus.co.kr/msg/v1/sms"
+	    -H  "accept: *'/*"
+	    -H  "Authorization: Bearer eyJhbGciOiJIUzI1NiJ..."
+	    -H  "Content-Type: application/json" */
+	    
+		function ajaxSend(reqUrl, contentType, methodType) {
+			
+	    	var token = $("#token").val();
+			
+			$.ajax({
+				url : "https://api.msghub.uplus.co.kr/auth/v1/" + reqUrl
+				, type : "POST"
+				, method : "POST"
+				, dataType : "json"
+				, data : $("#inputFrm").serialize()
+				, beforeSend : function(xhr) {
+					xhr.setRequestHeader("accept", "*/*");
+					xhr.setRequestHeader("Authorization", "Bearer " + token);
+					xhr.setRequestHeader("Content-Type", contentType);
+				}
+				, success : function(data) {
+					$("#result").val(data);
+				} 
+				, error : function(data) {
+					alert(data);
+				}
+			});
+			
+			
+			
+			$.ajax({
+				url : "https://api.msghub.uplus.co.kr/auth/v1/" + reqUrl
+				, type : "POST"
+				, method : "POST"
+				, dataType : "json"
+				, data : $("#inputFrm").serialize()
+				, beforeSend : function(xhr) { 
+				      xhr.setRequestHeader("Authorization", "Bearer " + (apikey)); 
+				      //xhr.setRequestHeader("Authorization", "Basic dGVzdF9ja19PRVA1OUx5Ylo4QmR2NkExSnhrVjZHWW83cFJlOg=="); 
+				}
+				, success : function(data) {
+					$("#result").val(data);
+				} 
+				, error : function(data) {
+					alert(data);
+				}
+			});
 		}
+		
 		
 		$('#request').on("change", function(){
 			var request = $('#request').val()
 			if(request == "mms2" || request == "mms3"){
-				console.log("mms2/mms3")
+				$("#contentType").val("multipart/form-data");
+				$("#methodType").val("POST");
+				
 			}else if(request == "rpt"){
-				console.log("rpt")
-			}else if(request == "refresh"){
-				console.log("refresh")
+				$("#contentType").val("multipart/form-data");
+				$("#methodType").val("GET");
 			}else{
-				console.log("else")
+				$("#contentType").val("application/json");
+				$("#methodType").val("POST");
 			}
 		});
+		
+		function makeRandomStr() {
+			var now = new Date();
+			var years = now.getFullYear();
+			var months = LPad(now.getMonth() + 1, 2, "0");
+			var dates = LPad(now.getDate(), 2, "0");
+			var hours = LPad(now.getHours(), 2, "0");
+			var randomValue = "dong" + years + months + dates + hours; 
+			document.getElementById("randomStr").value = randomValue;
+			return randomValue;
+		}
+		
+		function LPad(digit, size, attatch) {
+		    var add = "";
+		    digit = digit.toString();
+
+		    if (digit.length < size) {
+		        var len = size - digit.length;
+		        for (i = 0; i < len; i++) {
+		            add += attatch;
+		        }
+		    }
+		    return add + digit;
+		}
 	});	
 	
 	</script>
@@ -140,9 +304,9 @@
 								<select class="form-control" id="request" name="request">
 									<option value="refresh">인증갱신</option>
 									<option value="sms">SMS 발송</option>
-									<option value="mms">MMS 발송(첨부파일 사전등록시)</option>
 									<option value="mms2">이미지 사전등록</option>
 									<option value="mms3">MMS 발송</option>
+									<option value="mms">MMS 발송(첨부파일 사전등록시)</option>
 									<option value="rcs">RCS 발송</option>
 									<option value="alimtalk">카카오 알림톡</option>
 									<option value="friendtalk">카카오 친구톡</option>
