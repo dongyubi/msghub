@@ -6,3 +6,8 @@ spring:
   devtools:
     livereload:
       enabled: true
+      
+server:
+  url:
+    host: https://api.msghub.uplus.co.kr/
+
