@@ -2,7 +2,6 @@ package com.uplus.msghub;
 
 import java.net.http.HttpResponse;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.json.simple.JSONObject;
@@ -34,10 +33,8 @@ public class DashboardController {
 		java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyMMddhhmm");
 
 		String randomStr = sdf.format(today);
-		  
-    	String apiPwd = SecurityUtil.encodeBase64(SecurityUtil.sha512("test1234"));
-    	apiPwd = SecurityUtil.encodeBase64(SecurityUtil.sha512(apiPwd + "." + randomStr));
-    	
+		
+		String apiPwd = SecurityUtil.sha512("aaaaa", "bbbbb");
     	
     	String url = reqUrl + "auth/v1/" +randomStr;
     	String data = "{\"apiPwd\":\""+apiPwd+"\",\"apiKey\":\""+apiKey+"\"}";
