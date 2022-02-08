@@ -63,12 +63,17 @@ public class HttpClientUtil {
 		return response;
     }
     
-    public static HttpResponse<String> put(String uri, String data) throws Exception {
+    public static HttpResponse<String> put(String uri, String data, String auth) throws Exception {
+    	System.out.println("put request uri==>"+uri);
+	    System.out.println("put request data==>"+data);
+	    System.out.println("put request auth==>"+auth);
+	    
         HttpClient client = HttpClient.newBuilder().build();
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(uri))
                 .header("accept", "*/*")
     		    .header("Content-Type", "application/json")
+    		    .header("Authorization", "Bearer " + auth)
                 .PUT(BodyPublishers.ofString(data))
                 .build();
 
