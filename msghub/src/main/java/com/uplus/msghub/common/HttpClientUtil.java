@@ -64,7 +64,7 @@ public class HttpClientUtil {
     }
     
     public static HttpResponse<String> put(String uri, String data, String auth) throws Exception {
-    	System.out.println("put request uri==>"+uri);
+    	System.out.println("put request uri==>"+uri); 
 	    System.out.println("put request data==>"+data);
 	    System.out.println("put request auth==>"+auth);
 	    

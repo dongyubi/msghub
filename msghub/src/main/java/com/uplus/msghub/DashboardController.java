@@ -36,7 +36,7 @@ public class DashboardController {
 
 		String randomStr = sdf.format(today);
 		
-		String apiPwd = SecurityUtil.sha512("1q2w3e!!", randomStr);
+		String apiPwd = SecurityUtil.sha512("1q2w3e!!", randomStr); 
     	
     	String url = reqUrl + "auth/v1/" +randomStr;
     	String data = "{\"apiPwd\":\""+apiPwd+"\",\"apiKey\":\""+apiKey+"\"}";
